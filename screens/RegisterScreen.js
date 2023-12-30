@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   TextInput,
   Pressable,
+  Alert,
 } from "react-native";
 import { 
   Ionicons, 
@@ -15,6 +16,8 @@ import {
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
+import axios from 'axios';
+
 const RegisterScreen = () => {
 
   const [name, setName] = useState("");
@@ -22,6 +25,35 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+
+  const handleRegister = () => {
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    // send a POST  request to the backend API to register the user
+    axios
+      .post("http://localhost:8000/register", user)
+      .then((response) => {
+        console.log(response);
+        Alert.alert(
+          "Registration successful",
+          "You have been registered Successfully"
+        );
+        setName("");
+        setEmail("");
+        setPassword("");
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Registration Error",
+          "An error occurred while registering"
+        );
+        console.log("registration failed", error);
+      });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -118,7 +150,10 @@ const RegisterScreen = () => {
         </View>
 
         <View style={{ marginTop: 70 }}>
-          <Pressable style={styles.button}>
+          <Pressable
+              onPress={handleRegister} 
+              style={styles.button}
+            >
             <Text
               style={{
                 textAlign: "center",
