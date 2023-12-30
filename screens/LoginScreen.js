@@ -5,7 +5,8 @@ import {
   Text,
   KeyboardAvoidingView,
   TextInput,
-  Pressable
+  Pressable,
+  Alert
 } from 'react-native';
 import { 
   MaterialIcons, 
@@ -14,11 +15,34 @@ import {
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const LoginScreen = () => {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
 
   const navigation = useNavigation();
+
+  const handleLogin = () => {
+    const user = {
+      email: email,
+      password: password
+    }
+    
+    axios
+      .post('http://localhost:8000/login', user)
+      .then((response) => {
+        console.log(response);
+        const token = response.data.token;
+        AsyncStorage.setItem('authToken', token);
+        navigation.replace("Home");
+      })
+      .catch((error) => {
+        Alert.alert("Login error", "Invalid Email");
+        console.log(error);
+      })
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,7 +98,10 @@ const LoginScreen = () => {
         </View>
 
         <View style={{marginTop: 70}}>
-          <Pressable style={styles.button}>
+          <Pressable 
+            onPress={handleLogin}
+            style={styles.button}
+          >
             <Text style={{ textAlign: 'center', color: 'white', fontSize: 16, fontWeight: 'bold'}}>Login</Text>
           </Pressable>
 
