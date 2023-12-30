@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import { 
   SafeAreaView, 
   StyleSheet, 
@@ -8,21 +10,37 @@ import {
   Pressable,
   Alert
 } from 'react-native';
+
 import { 
   MaterialIcons, 
   AntDesign
 } from '@expo/vector-icons';
-import { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem('authToken');
+
+        if (token) {
+          navigation.replace('Main');
+        }
+      } catch (error) {
+        console.log('error message', err);
+      }
+    };
+
+    checkLoginStatus();
+  }, [])
 
   const handleLogin = () => {
     const user = {
@@ -36,7 +54,7 @@ const LoginScreen = () => {
         console.log(response);
         const token = response.data.token;
         AsyncStorage.setItem('authToken', token);
-        navigation.replace("Home");
+        navigation.replace("Main");
       })
       .catch((error) => {
         Alert.alert("Login error", "Invalid Email");
