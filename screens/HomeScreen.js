@@ -9,20 +9,20 @@ import {
   ScrollView, 
   StyleSheet, 
   Text, 
-  TextInput, 
   View 
 } from 'react-native';
 import { 
-  AntDesign, 
-  Feather, 
   Ionicons,
-  MaterialIcons
+  MaterialIcons,
 } from '@expo/vector-icons';
 
 import ImgNot from '../assets/images/cat-notebook1.webp';
 
+import Header from '../components/Header';
 import Carousel from '../components/Carousel';
 import ProductItem from '../components/ProductItem';
+
+import { useNavigation } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const HomeScreen = () => {
@@ -146,7 +146,7 @@ const HomeScreen = () => {
       oldPrice: 7500,
       price: 4500,
       image: ImgNot,
-      CarouselImages: [
+      carouselImages: [
         ImgNot,
         ImgNot,
         ImgNot,
@@ -162,7 +162,7 @@ const HomeScreen = () => {
       oldPrice: 7500,
       price: 4500,
       image: ImgNot,
-      CarouselImages: [
+      carouselImages: [
         ImgNot,
         ImgNot,
         ImgNot,
@@ -178,7 +178,7 @@ const HomeScreen = () => {
       oldPrice: 7500,
       price: 4500,
       image: ImgNot,
-      CarouselImages: [
+      carouselImages: [
         ImgNot,
         ImgNot,
         ImgNot,
@@ -194,7 +194,7 @@ const HomeScreen = () => {
       oldPrice: 7500,
       price: 4500,
       image: ImgNot,
-      CarouselImages: [
+      carouselImages: [
         ImgNot,
         ImgNot,
         ImgNot,
@@ -213,6 +213,8 @@ const HomeScreen = () => {
     { label: "electronics", value: "electronics"},
     { label: "women's clothing", value: "women's clothing"},
   ]);
+
+  const navigation = useNavigation();
 
   const [ products, setProducts ] = useState([]);
   
@@ -240,24 +242,13 @@ const HomeScreen = () => {
       style={styles.container}
     >
       <ScrollView>
-        <View
-          style={styles.header}
-        >
-          <Pressable
-            style={styles.inputSearch}
-          >
-            <AntDesign style={{ paddingLeft: 10 }} name="search1" size={22} color="black"/>
-            <TextInput placeholder='Search' placeholderTextColor="gray"/>
-          </Pressable>
 
-          <Feather name="mic" size={24} color="black"/>
-        </View>
+        <Header/>
 
         <View>
           <Pressable
             style={styles.containerLocation}
           >
-
             <Ionicons name="location-outline" size={24} color="black"/>
             <Text style={{ fontSize: 13, fontWeight: '500'}}>Deliver to Sujan - Bangalores</Text>
             <MaterialIcons name="keyboard-arrow-down" size={24} color="black"/>
@@ -314,10 +305,22 @@ const HomeScreen = () => {
         <Text style={styles.titleSection}>Today's Deals</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {offers.map((item, index) => (
-            <Pressable style={{ 
-              marginVertical: 10, 
-              alignItems: 'center', 
-              justifyContent: 'center'
+            <Pressable 
+              onPress={() => navigation.navigate('Info', {
+                id: item.id,
+                title: item.title,
+                price: item?.price,
+                carouselImages: item.carouselImages,
+                color: item?.color,
+                size: item?.size,
+                oldPrice: item?.oldPrice,
+                item: item
+
+              })}
+              style={{ 
+                marginVertical: 10, 
+                alignItems: 'center', 
+                justifyContent: 'center'
               }}
             >
               <Image style={{ width: 150, height: 150, resizeMode: 'contain'}} source={{ uri: item?.image}}/>
@@ -325,8 +328,7 @@ const HomeScreen = () => {
               <View 
                 style={styles.buttonOffer}
               >
-                <Text 
-                  style={styles.titleOffer}>Upto {item?.offer}</Text>
+                <Text style={styles.titleOffer}>Upto {item?.offer}</Text>
               </View>
             </Pressable>
           ))}
@@ -393,22 +395,6 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "android" ? 40 : 0,
     flex: 1,
     backgroundColor: 'white',
-  },
-  header: {
-    backgroundColor: '#00ced1',
-    padding: 10,
-    flexDirection: 'row',
-    alignContent: 'center'
-  },
-  inputSearch: {
-    flexDirection: " row",
-    alignItems: "center",
-    marginHorizontal: 7,
-    gap: 10,
-    backgroundColor: 'white',
-    borderRadius: 3,
-    height: 38,
-    flex: 1
   },
   containerLocation: {
     flexDirection: 'row',
