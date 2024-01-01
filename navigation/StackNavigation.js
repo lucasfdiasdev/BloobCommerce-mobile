@@ -11,6 +11,8 @@ import { Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
 import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ProductInfoScreen from '../screens/ProductInfoScreen';
+import AddLocationScreen from '../screens/AddLocationScreen';
+import AddressScreen from '../screens/AddressScreen';
 
 const StackNavigation = () => {
 
@@ -94,6 +96,18 @@ const StackNavigation = () => {
         <Stack.Screen 
           name="Info" 
           component={ProductInfoScreen} 
+          options={{ headerShown: false}}
+        />
+
+        <Stack.Screen 
+          name="Address"
+          component={AddLocationScreen} 
+          options={{ headerShown: false}}
+        />
+
+        <Stack.Screen 
+          name="Add"
+          component={AddressScreen} 
           options={{ headerShown: false}}
         />
       </Stack.Navigator>
