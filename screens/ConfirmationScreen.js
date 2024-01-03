@@ -3,7 +3,8 @@ import { useState, useEffect, useContext } from "react";
 import { Text, View, StyleSheet, ScrollView, Pressable } from "react-native";
 import { UserType } from "../context/UserContext";
 
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 const ConfirmationScreen = () => {
   const steps = [
@@ -16,6 +17,14 @@ const ConfirmationScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [addresses, setAddresses] = useState([]);
   const { userId, setUserId } = useContext(UserType);
+
+  const cart = useSelector((state) => state.cart.cart);
+  console.log(cart);
+
+  const total = cart
+    ?.map((item) => item.price * item.quantity)
+    .reduce((curr, prev) => curr + prev, 0);
+
   useEffect(() => {
     fetchAddresses();
   });
@@ -36,7 +45,8 @@ const ConfirmationScreen = () => {
   console.log(addresses, "Addresses");
 
   const [selectedAddresses, setSelectedAddresses] = useState("");
-  const [options, setOptions] = useState("");
+  const [options, setOptions] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
 
   return (
     <ScrollView style={{ marginTop: 55 }}>
@@ -264,6 +274,220 @@ const ConfirmationScreen = () => {
           </View>
           <Pressable
             onPress={() => setCurrentStep(2)}
+            style={{
+              backgroundColor: "#ffc72c",
+              padding: 10,
+              borderRadius: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 15,
+            }}
+          >
+            <Text>Continue shipping</Text>
+          </Pressable>
+        </View>
+      )}
+
+      {currentStep == 2 && (
+        <View style={{ marginHorizontal: 20 }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            Select your payment Method
+          </Text>
+
+          <View
+            style={{
+              backgroundColor: "white",
+              padding: 8,
+              borderColor: "#d0d0d0",
+              borderWidth: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 7,
+              marginTop: 12,
+            }}
+          >
+            {selectedOption === "cash" ? (
+              <FontAwesome5 name="dot-circle" size={24} color="#008397" />
+            ) : (
+              <Entypo
+                onPress={() => setSelectedOption("cash")}
+                name="circle"
+                size={24}
+                color="gray"
+              />
+            )}
+            <Text>Cash on Delivery</Text>
+          </View>
+
+          <View
+            style={{
+              backgroundColor: "white",
+              padding: 8,
+              borderColor: "#d0d0d0",
+              borderWidth: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 7,
+              marginTop: 12,
+            }}
+          >
+            {selectedOption === "card" ? (
+              <FontAwesome5 name="dot-circle" size={24} color="#008397" />
+            ) : (
+              <Entypo
+                onPress={() => setSelectedOption("card")}
+                name="circle"
+                size={24}
+                color="gray"
+              />
+            )}
+            <Text>UPI / Credit or debit card </Text>
+          </View>
+
+          <View
+            style={{
+              backgroundColor: "white",
+              padding: 8,
+              borderColor: "#d0d0d0",
+              borderWidth: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 7,
+              marginTop: 12,
+            }}
+          >
+            {selectedOption === "boleto" ? (
+              <FontAwesome5 name="dot-circle" size={24} color="#008397" />
+            ) : (
+              <Entypo
+                onPress={() => setSelectedOption("boleto")}
+                name="circle"
+                size={24}
+                color="gray"
+              />
+            )}
+            <Text>Boleto</Text>
+          </View>
+
+          <View
+            style={{
+              backgroundColor: "white",
+              padding: 8,
+              borderColor: "#d0d0d0",
+              borderWidth: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 7,
+              marginTop: 12,
+            }}
+          >
+            {selectedOption === "pix" ? (
+              <FontAwesome5 name="dot-circle" size={24} color="#008397" />
+            ) : (
+              <Entypo
+                onPress={() => setSelectedOption("card")}
+                name="circle"
+                size={24}
+                color="gray"
+              />
+            )}
+            <Text>PIX</Text>
+          </View>
+
+          <Pressable
+            onPress={() => setCurrentStep(3)}
+            style={{
+              backgroundColor: "#ffc72c",
+              padding: 10,
+              borderRadius: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 15,
+            }}
+          >
+            <Text>Continue shipping</Text>
+          </Pressable>
+        </View>
+      )}
+
+      {currentStep === 3 && selectedOption === "cash" && (
+        <View style={{ marginHorizontal: 20 }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>Order Now</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+              backgroundColor: "white",
+              padding: 8,
+              borderColor: "#d0d0d0",
+              borderWidth: 1,
+              marginTop: 10,
+            }}
+          >
+            <View>
+              <Text style={{ fontSize: 17, fontWeight: "bold" }}>
+                Save 5% and never run out
+              </Text>
+              <Text style={{ fontSize: 15, color: "gray", marginTop: 5 }}>
+                Turn on auto deliveries
+              </Text>
+            </View>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={24}
+              color="black"
+            />
+          </View>
+
+          <View
+            style={{
+              backgroundColor: "white",
+              padding: 8,
+              borderColor: "#d0d0d0",
+              borderWidth: 1,
+              marginTop: 10,
+            }}
+          >
+            <Text>Shipping to {selectedAddresses?.name}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8}}>
+              <Text style={{ fontSize: 16, fontWeight: '500', color: 'gray'}}>Delivery</Text>
+              <Text style={{ color: 'gray', fontSize: 16}}>R$ {total}</Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8}}>
+              <Text style={{ fontSize: 16, fontWeight: '500', color: 'gray'}}>Items</Text>
+              <Text style={{ color: 'gray', fontSize: 16}}>R$ {total}</Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8}}>
+              <Text style={{ fontSize: 16, fontWeight: '500', color: 'gray'}}>Delivery</Text>
+              <Text style={{ color: 'gray', fontSize: 16}}>R$ 0</Text>
+            </View>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8}}>
+              <Text style={{ fontSize: 16, fontWeight: '500', color: 'gray'}}>Order Total</Text>
+              <Text style={{ color: '#c60c30', fontSize: 17, fontWeight: 'bold'}}>R$ {total}</Text>
+            </View>
+          </View>
+
+          <View
+            style={{
+              backgroundColor: 'white',
+              padding: 8,
+              borderColor: '#d0d0d0',
+              borderWidth: 1,
+              marginTop: 10
+            }}
+          >
+            <Text style={{ fontSize: 16, color: 'gray'}}>Pay with</Text>
+          </View>
+          <Text style={{ fontSize: 16, fontWeight: '600', marginTop: 7 }}>Pay on delivery</Text>
+
+          <Pressable
+            onPress={() => setCurrentStep(4)}
             style={{
               backgroundColor: "#ffc72c",
               padding: 10,
