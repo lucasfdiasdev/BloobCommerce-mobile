@@ -35,7 +35,8 @@ const ConfirmationScreen = () => {
 
   console.log(addresses, "Addresses");
 
-  const [ selectedAddresses, setSelectedAddresses ] = useState('');
+  const [selectedAddresses, setSelectedAddresses] = useState("");
+  const [options, setOptions] = useState("");
 
   return (
     <ScrollView style={{ marginTop: 55 }}>
@@ -112,27 +113,22 @@ const ConfirmationScreen = () => {
                   borderColor: "#d0d0d0",
                   padding: 10,
                   flexDirection: "row",
-                  alignItems: 'center',
+                  alignItems: "center",
                   gap: 5,
                   paddingBottom: 17,
                   marginVertical: 7,
-                  borderRadius: 6
+                  borderRadius: 6,
                 }}
               >
                 {selectedAddresses && selectedAddresses._id === item?._id ? (
-                  <FontAwesome5 
-                  name="dot-circle" 
-                  size={24} 
-                  color="#008397" 
-                  />
+                  <FontAwesome5 name="dot-circle" size={24} color="#008397" />
                 ) : (
-                  <Entypo 
+                  <Entypo
                     onPress={() => setSelectedAddresses(item)}
-                    name="circle" 
-                    size={24} 
-                    color="gray" 
+                    name="circle"
+                    size={24}
+                    color="gray"
                   />
-
                 )}
 
                 <View style={{ marginLeft: 6 }}>
@@ -205,25 +201,79 @@ const ConfirmationScreen = () => {
                     </Pressable>
                   </View>
                   <View>
-                    {selectedAddresses && selectedAddresses._id === item?._id && (
-                      <Pressable
-                        onPress={() => setCurrentStep(1)}
-                        style={{
-                          backgroundColor: '#008397',
-                          padding: 10,
-                          borderRadius: 7,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          marginTop: 10,
-                        }}
-                      >
-                        <Text style={{ textAlign: 'center', color: 'white'}}>Deliver to this Address</Text>
-                      </Pressable>
-                    )}
+                    {selectedAddresses &&
+                      selectedAddresses._id === item?._id && (
+                        <Pressable
+                          onPress={() => setCurrentStep(1)}
+                          style={{
+                            backgroundColor: "#008397",
+                            padding: 10,
+                            borderRadius: 7,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            marginTop: 10,
+                          }}
+                        >
+                          <Text style={{ textAlign: "center", color: "white" }}>
+                            Deliver to this Address
+                          </Text>
+                        </Pressable>
+                      )}
                   </View>
                 </View>
               </Pressable>
             ))}
+          </Pressable>
+        </View>
+      )}
+
+      {currentStep == 1 && (
+        <View style={{ marginHorizontal: 20 }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            Choose your Delivery Options
+          </Text>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: "white",
+              padding: 8,
+              gap: 7,
+              borderColor: "#d0d0d0",
+              borderWidth: 1,
+              marginTop: 10,
+            }}
+          >
+            {options ? (
+              <FontAwesome5 name="dot-circle" size={24} color="#008397" />
+            ) : (
+              <Entypo
+                onPress={() => setOptions(!options)}
+                name="circle"
+                size={24}
+                color="gray"
+              />
+            )}
+            <Text style={{ flex: 1 }}>
+              <Text style={{ color: "green", fontWeight: "500" }}>
+                Tomorrow by 10pm
+              </Text>{" "}
+              - FREE delivery with your prime membership
+            </Text>
+          </View>
+          <Pressable
+            onPress={() => setCurrentStep(2)}
+            style={{
+              backgroundColor: "#ffc72c",
+              padding: 10,
+              borderRadius: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 15,
+            }}
+          >
+            <Text>Continue shipping</Text>
           </Pressable>
         </View>
       )}
