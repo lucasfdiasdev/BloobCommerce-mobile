@@ -17,10 +17,12 @@ import {
 import Header from "../components/Header";
 
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const CartScreen = () => {
   
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const cart = useSelector((state) => state.cart.cart);
 
@@ -61,6 +63,7 @@ const CartScreen = () => {
       <Text style={{ marginHorizontal: 10 }}>EMI Details Available</Text>
 
       <Pressable
+        onPress={() => navigation.navigate('Confirmation')}
         style={{
           backgroundColor: "#ffc72c",
           padding: 10,

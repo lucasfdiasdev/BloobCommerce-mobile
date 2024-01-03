@@ -2,7 +2,8 @@ import axios from "axios";
 import { 
   useState, 
   useEffect, 
-  useContext 
+  useContext, 
+  useCallback
 } from "react";
 
 import { 
@@ -17,7 +18,7 @@ import Header from "../components/Header";
 import { UserType } from "../context/UserContext";
 
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const AddLocationScreen = () => {
   const navigation = useNavigation();
@@ -41,6 +42,13 @@ const AddLocationScreen = () => {
     }
   };
   console.log("Addresses", addresses);
+
+  // refresh the addresses when the component comes to the focus is basically when we navigate back  
+  useFocusEffect(
+    useCallback(() => {
+      fetchAddresses();
+    }, [])
+  )
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 50 }}>

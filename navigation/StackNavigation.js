@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
-import HomeScreen from '../screens/HomeScreen';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
 
-import { Ionicons, AntDesign, Entypo } from '@expo/vector-icons'; 
+import HomeScreen from '../screens/HomeScreen';
 import CartScreen from '../screens/CartScreen';
+import LoginScreen from '../screens/LoginScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import AddressScreen from '../screens/AddressScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import ProductInfoScreen from '../screens/ProductInfoScreen';
 import AddLocationScreen from '../screens/AddLocationScreen';
-import AddressScreen from '../screens/AddressScreen';
+import ConfirmationScreen from '../screens/ConfirmationScreen';
 
 const StackNavigation = () => {
 
@@ -108,6 +109,12 @@ const StackNavigation = () => {
         <Stack.Screen 
           name="Add"
           component={AddressScreen} 
+          options={{ headerShown: false}}
+        />
+
+        <Stack.Screen 
+          name="Confirmation"
+          component={ConfirmationScreen} 
           options={{ headerShown: false}}
         />
       </Stack.Navigator>
