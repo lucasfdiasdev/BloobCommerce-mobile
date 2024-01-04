@@ -7,6 +7,7 @@ import { Ionicons, AntDesign, Entypo } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/HomeScreen';
 import CartScreen from '../screens/CartScreen';
+import OrderScreen from '../screens/OrderScreen';
 import LoginScreen from '../screens/LoginScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AddressScreen from '../screens/AddressScreen';
@@ -17,9 +18,9 @@ import ConfirmationScreen from '../screens/ConfirmationScreen';
 
 const StackNavigation = () => {
 
+  const Tab = createBottomTabNavigator();
   const Stack = createNativeStackNavigator();
 
-  const Tab = createBottomTabNavigator();
   function BottomTabs() {
     return (
       <Tab.Navigator>
@@ -28,7 +29,7 @@ const StackNavigation = () => {
           component={HomeScreen}
           options={{
             tabBarLabel: "Home",
-            tabBarLabelStyle: {colo: '#008e97'},
+            tabBarLabelStyle: {color: '#008e97'},
             headerShown: false,
             tabBarIcon: ({ focused}) => 
             focused ? (
@@ -44,7 +45,7 @@ const StackNavigation = () => {
           component={ProfileScreen}
           options={{
             tabBarLabel: "Profile",
-            tabBarLabelStyle: {colo: '#008e97'},
+            tabBarLabelStyle: {color: '#008e97'},
             headerShown: false,
             tabBarIcon: ({ focused}) => 
             focused ? (
@@ -60,7 +61,7 @@ const StackNavigation = () => {
           component={CartScreen}
           options={{
             tabBarLabel: "Cart",
-            tabBarLabelStyle: {colo: '#008e97'},
+            tabBarLabelStyle: {color: '#008e97'},
             headerShown: false,
             tabBarIcon: ({ focused}) => 
             focused ? (
@@ -115,6 +116,12 @@ const StackNavigation = () => {
         <Stack.Screen 
           name="Confirmation"
           component={ConfirmationScreen} 
+          options={{ headerShown: false}}
+        />
+
+        <Stack.Screen 
+          name="Order"
+          component={OrderScreen} 
           options={{ headerShown: false}}
         />
       </Stack.Navigator>

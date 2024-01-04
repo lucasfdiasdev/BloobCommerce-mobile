@@ -6,8 +6,10 @@ import { Provider } from 'react-redux';
 import { UserContext } from './context/UserContext';
 
 export default function App() {
+
   return (
     <>
+      
       <Provider store={store}>
         <UserContext>
           <StackNavigation/>

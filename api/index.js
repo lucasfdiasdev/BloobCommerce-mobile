@@ -3,6 +3,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+const bcrypt = require('bcryptjs');
+
+const paymentRoutes = require('./router/paymentRoutes');
+
+dotenv.config();
 
 const app = express();
 const port = 8000
@@ -12,10 +18,13 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// routers
+app.use('/payments', paymentRoutes);
+
 const jwt = require('jsonwebtoken');
 
 mongoose.
-  connect("mongodb+srv://lucasferndias:vilFGKgX5kOp8RXE@cluster0.feup4b5.mongodb.net/")
+  connect(process.env.MONGODB_KEY)
   .then(() => {
     console.log('Connected to mongodb');
   })
@@ -27,11 +36,9 @@ mongoose.
     console.log('Server is runinng on http://localhost:8000')
   });
 
-
   // models
   const User = require('./models/user');
   const Order = require('./models/order');
-
 
   // func to send verification email to the user
   const sendVerificationEmail = async (email, verificationToken) => {
@@ -62,7 +69,6 @@ mongoose.
     }
   }
 
-
   // endpoint to register in the app
   app.post("/register", async (req, res) => {
     try {
@@ -74,9 +80,12 @@ mongoose.
         console.log("Email already registered:", email); // Debugging statement
         return res.status(400).json({ message: "Email already registered" });
       }
+
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 12);
   
       // Create a new user
-      const newUser = new User({ name, email, password });
+      const newUser = new User({ name, email, password: hashedPassword });
   
       // Generate and store the verification token
       newUser.verificationToken = crypto.randomBytes(20).toString("hex");
@@ -101,7 +110,6 @@ mongoose.
     }
   });
   
-
   // endpoint to verify the email
   app.get('/verify/:token', async (req, res) => {
     try {
@@ -127,7 +135,6 @@ mongoose.
     }
   });
 
-
   const generateSecretKey = () => {
     const secretKey = crypto.randomBytes(32).toString("hex");
   
@@ -147,10 +154,12 @@ mongoose.
         return res.status(401).json({message: 'Invalid email or password'})
       }
 
-      // check if the password is correct
-      if(user.password !== password) {
-        return res.status(401).json({message: 'Invalid password'});
-      } 
+       // Comparar a senha fornecida com a senha hash armazenada
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+        return res.status(400).json({ message: "Invalid credentials" });
+      }
 
       // generate  token
       const token = jwt.sign({ userId: user._id}, secretKey)
@@ -214,10 +223,10 @@ mongoose.
       
       // create an array of product objects from the cart items
       const products = cartItems.map((item) => ({
-        name: item?.name,
+        name: item?.title,
         quantity: item.quantity,
         price: item.price,
-        Image: item.image
+        image: item?.image
       }));
 
       // create a new Order
@@ -241,7 +250,7 @@ mongoose.
   });
 
   // get the user profile
-  app.get('/profile/:userid', async (req, res) => {
+  app.get('/profile/:userId', async (req, res) => {
     try {
       const userId = req.params.userId;
       
@@ -258,6 +267,7 @@ mongoose.
     };
   });
 
+  // get order userId
   app.get('/orders/:userId', async (req, res) => {
     try {
       const userId = req.params.userId;

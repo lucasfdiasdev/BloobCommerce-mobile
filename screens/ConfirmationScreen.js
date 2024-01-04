@@ -1,10 +1,24 @@
 import axios from "axios";
-import { useState, useEffect, useContext } from "react";
-import { Text, View, StyleSheet, ScrollView, Pressable } from "react-native";
+import { 
+  useState,
+  useEffect,
+  useContext,
+} from "react";
+import { 
+  Text,
+  View,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from "react-native";
+
+import { cleanCart } from '../redux/CartReducer'
 import { UserType } from "../context/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import { useSelector } from "react-redux";
 
 const ConfirmationScreen = () => {
   const steps = [
@@ -13,6 +27,8 @@ const ConfirmationScreen = () => {
     { title: "Payment", content: "Payment Details" },
     { title: "Place Order", content: "Order Summary" },
   ];
+
+  const navigation = useNavigation();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [addresses, setAddresses] = useState([]);
@@ -44,10 +60,47 @@ const ConfirmationScreen = () => {
 
   console.log(addresses, "Addresses");
 
-  const [selectedAddresses, setSelectedAddresses] = useState("");
+  const dispatch = useDispatch();
+
   const [options, setOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const [selectedAddresses, setSelectedAddresses] = useState("");
 
+  const handlePlaceOrder = async () => {
+    try {
+      const orderData = {
+        userId: userId,
+        cartItems: cart,
+        totalPrice: total,
+        shippingAddress: selectedAddresses,
+        paymentMethod: selectedOption
+      }
+
+      const response = await axios.post('http://localhost:8000/orders', orderData);
+
+      if(response.status === 200) {
+        navigation.navigate('Order');
+        dispatch(cleanCart());
+        console.log('order created successfully', response.data.order);
+
+      } else {
+        console.log('error creating order', response.data);
+      };
+
+    } catch (error) {
+      console.log('error', error);
+    };
+  };
+
+  const pay = async () => {
+    try {
+      
+
+    } catch (error) {
+      console.log('error', error);
+
+    }
+  }
   return (
     <ScrollView style={{ marginTop: 55 }}>
       <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 40 }}>
@@ -335,7 +388,19 @@ const ConfirmationScreen = () => {
               <FontAwesome5 name="dot-circle" size={24} color="#008397" />
             ) : (
               <Entypo
-                onPress={() => setSelectedOption("card")}
+                onPress={() => {
+                  setSelectedOption("card");
+                  Alert.alert("UPI/ Debit card", "Pay Online", [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel is pressed'),
+                    },
+                    {
+                      text: 'Ok',
+                      onPress: () => pay(),
+                    }
+                  ])
+                }}
                 name="circle"
                 size={24}
                 color="gray"
@@ -453,11 +518,6 @@ const ConfirmationScreen = () => {
             <Text>Shipping to {selectedAddresses?.name}</Text>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8}}>
-              <Text style={{ fontSize: 16, fontWeight: '500', color: 'gray'}}>Delivery</Text>
-              <Text style={{ color: 'gray', fontSize: 16}}>R$ {total}</Text>
-            </View>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 8}}>
               <Text style={{ fontSize: 16, fontWeight: '500', color: 'gray'}}>Items</Text>
               <Text style={{ color: 'gray', fontSize: 16}}>R$ {total}</Text>
             </View>
@@ -487,7 +547,7 @@ const ConfirmationScreen = () => {
           <Text style={{ fontSize: 16, fontWeight: '600', marginTop: 7 }}>Pay on delivery</Text>
 
           <Pressable
-            onPress={() => setCurrentStep(4)}
+            onPress={handlePlaceOrder}
             style={{
               backgroundColor: "#ffc72c",
               padding: 10,

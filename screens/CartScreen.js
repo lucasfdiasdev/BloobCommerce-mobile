@@ -47,6 +47,8 @@ const CartScreen = () => {
     dispatch(cleanCart(item));
   }
 
+  const isCartEmpty = cart.length === 0;
+
   return (
     <View
       style={{
@@ -62,20 +64,39 @@ const CartScreen = () => {
       </View>
       <Text style={{ marginHorizontal: 10 }}>EMI Details Available</Text>
 
-      <Pressable
-        onPress={() => navigation.navigate('Confirmation')}
-        style={{
-          backgroundColor: "#ffc72c",
-          padding: 10,
-          borderRadius: 5,
-          justifyContent: "center",
-          alignItems: "center",
-          marginHorizontal: 10,
-          marginTop: 10,
-        }}
-      >
-        <Text>Proceed to buy ({cart.length}) items</Text>
-      </Pressable>
+
+      {isCartEmpty ? (
+        <Pressable
+          onPress={() => navigation.navigate('Home')}
+          style={{
+            backgroundColor: "#ffc72c",
+            padding: 10,
+            borderRadius: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            marginHorizontal: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text>Continue comprando</Text>
+        </Pressable>
+        
+      ) : (
+        <Pressable
+          onPress={() => navigation.navigate('Confirmation')}
+          style={{
+            backgroundColor: "#ffc72c",
+            padding: 10,
+            borderRadius: 5,
+            justifyContent: "center",
+            alignItems: "center",
+            marginHorizontal: 10,
+            marginTop: 10,
+          }}
+        >
+          <Text>Proceed to buy ({cart.length}) items</Text>
+        </Pressable>
+      )}
 
       <Text
         style={{

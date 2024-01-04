@@ -41,7 +41,7 @@ export const CartSlice = createSlice({
     cleanCart: (state) => {
       state.cart = [];
     }
-  }
+  },
 });
 
 export const { addToCart, removeFromCart, incrementQuantity, decrementQuantity, cleanCart } = CartSlice.actions;

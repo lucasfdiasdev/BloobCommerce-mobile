@@ -7,10 +7,9 @@ import {
   Pressable,
   TextInput,
   StyleSheet,
+  ScrollView,
   SafeAreaView,
   KeyboardAvoidingView,
-  ScrollView,
-  Platform,
 } from "react-native";
 
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
@@ -68,61 +67,55 @@ const LoginScreen = () => {
         <Text style={{ fontSize: 30 }}>BloobCommerce</Text>
       </View>
 
-      <KeyboardAvoidingView 
-        enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-      >
+      <KeyboardAvoidingView >
         <View style={{ alignItems: "center" }}>
           <Text style={styles.subtitle}>Login In to your Account</Text>
         </View>
 
-        <ScrollView>
-          <View style={{ marginTop: 70 }}>
-            <View style={styles.input}>
-              <MaterialIcons
-                style={{ marginLeft: 8 }}
-                name="email"
-                size={24}
-                color="gray"
-              />
-              <TextInput
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                style={{
-                  color: "gray",
-                  marginVertical: 10,
-                  width: 300,
-                  fontSize: email ? 16 : 16,
-                }}
-                placeholder="enter your Email"
-              />
-            </View>
+        <View style={{ marginTop: 70 }}>
+          <View style={styles.input}>
+            <MaterialIcons
+              style={{ marginLeft: 8 }}
+              name="email"
+              size={24}
+              color="gray"
+            />
+            <TextInput
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              style={{
+                color: "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: email ? 16 : 16,
+              }}
+              placeholder="enter your Email"
+            />
           </View>
+        </View>
 
-          <View style={{ marginTop: 10 }}>
-            <View style={styles.input}>
-              <AntDesign
-                style={{ marginLeft: 8 }}
-                name="lock1"
-                size={24}
-                color="gray"
-              />
-              <TextInput
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry={true}
-                style={{
-                  color: "gray",
-                  marginVertical: 10,
-                  width: 300,
-                  fontSize: password ? 16 : 16,
-                }}
-                placeholder="enter your Password"
-              />
-            </View>
+        <View style={{ marginTop: 10 }}>
+          <View style={styles.input}>
+            <AntDesign
+              style={{ marginLeft: 8 }}
+              name="lock1"
+              size={24}
+              color="gray"
+            />
+            <TextInput
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={true}
+              style={{
+                color: "gray",
+                marginVertical: 10,
+                width: 300,
+                fontSize: password ? 16 : 16,
+              }}
+              placeholder="enter your Password"
+            />
           </View>
-
-        </ScrollView>
+        </View>
 
         <View
           style={{
